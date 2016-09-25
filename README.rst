@@ -36,7 +36,7 @@ Example usage
 ``patch_apply.sh`` 
 -----------------
 
-Assume we want to apply patch ``torus.patch`` to MCNP5. The patch file is in
+Assume we want to apply the ``torus.patch`` patch to MCNP5. The patch file is in
 the current folder, original MCNP5 source is in
 ``$HOME/dist/C810mnycp00/MCNP_CODE/MCNP5`` (this path corresponds to the folder
 containing source code for MCNP-5, as distributed with MCNP-6), and scripts
@@ -44,12 +44,13 @@ containing source code for MCNP-5, as distributed with MCNP-6), and scripts
 
     > patch_apply.sh \
       $HOME/dist/C810mnycp00/MCNP_CODE/MCNP5 \      # original files
-      torus.patch.5 \                               #  patch
       $HOME/work/MCNP5-mod                          # place for modified files
+      torus.patch.5 \                               #  patch
 
 will copy ``$HOME/dist/C810mnycp00/MCNP_CODE/MCNP5`` to
 ``$HOME/work/MCNP5-mod`` if the latter does not exist, and the patch will be
-applied to the copy.  
+applied to files in ``$HOME/work/MCNP5-mod``. For details see the comments in the script file.
+
 
 
 ``patch_get.sh`` 
@@ -58,9 +59,9 @@ applied to the copy.
 Script ``patch_get.sh`` can generate a patch file by comparing two folders in
 the current directory (to protect from comparing folders from different places, 
 the script checks whether paths to the original and modified directoreis contain 
-the folder delimiter character ``/`` and exits if it is found). Consider
+the folder delimiter character ``/`` and exits if it is found. Consider
 to use links to put the folders containing original and modified files into the
-same place. 
+same place). 
 
 Files mentioned in the file ``exclude_patterns`` will be excluded from the generated
 patch. This file is created by ``patch_get.sh`` if not exists already, with the
@@ -73,21 +74,9 @@ Put information about applied patches into MCNP executable
 --------------------------------------------------------------
 
 Script ``patch_apply.sh`` adds the name of currently applied patch to the file
-``patches.log``, located in the directory with modified content. This file is than
+``patches.log``, located in the directory with modified content. This file is then
 read by ``compile.sh`` and its content is copied to the default data path of
 compiled MCNP executable. In this way, the user can track the patches applied to
 particular executable. 
-
-
-
-Future work
-==============
-
-In ``patch_apply.sh``, the source folder not always needed: 
-If patch is applied to allready existing folder, the source folder with original 
-files is not needed. THus, it should not be specified on the command line.
-
-
-
 
 
