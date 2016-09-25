@@ -49,7 +49,9 @@ containing source code for MCNP-5, as distributed with MCNP-6), and scripts
 
 will copy ``$HOME/dist/C810mnycp00/MCNP_CODE/MCNP5`` to
 ``$HOME/work/MCNP5-mod`` if the latter does not exist, and the patch will be
-applied to files in ``$HOME/work/MCNP5-mod``. For details see the comments in the script file.
+applied to files in ``$HOME/work/MCNP5-mod``. For details see the comments in the `script file`_.
+
+.. _`script file`: patch_apply.sh
 
 
 
