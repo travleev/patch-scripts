@@ -72,6 +72,27 @@ appear after MCNP compilation will not go to patch). Once created, it can be mod
 to exclude other files.
 
 
+MCNP compilation generates many auxiliary files and even removes some from the
+original distribution (the ``make build`` command to compile MCNP-6 calls under
+some consitions the target ``realclean``, which deletes utilities from the
+``bin`` folder). Therefore, it is better to clean both folders, with the
+original distribution and with modified code before generating the patch file.
+Assuming that the original files are in ``mcnp-orig`` and modified in
+``mcnp-mod``, the following commands should be called to generate the patch::
+
+    > cd mcnp-orig/Source
+    > make realclean
+    > cd ../../mcnp-mod/Source
+    > make realclean
+    > cd ../..
+    > patch_get mcnp-orig mcnp-mod
+
+
+Note for MCNP-6
+-----------------
+
+
+
 Put information about applied patches into MCNP executable
 --------------------------------------------------------------
 
