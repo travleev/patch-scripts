@@ -34,41 +34,41 @@ fi;
 # 1-st existing ordinary file (not a folder) defines PATCH.
 # 
 # The order of folders, ORIG followed by MOD is chosen deliberately to be
-# consistent with the cp command.
+# consistent with the ``cp`` command.
 # 
 # 
 # 
 # EXAMPLES:
-#     Assume that mcnp5 is an existing folder containing mcnp source code,
-#     mcnp5-mod does not exists, and torus.patch is a patch file. The following
+#     Assume that `orig` is an existing folder containing some source code,
+#     `mod` does not exists, and `patch.1` is a patch file. The following
 #     commands are equal:
 # 
-#     > patch_apply.sh mcnp5   mcnp5-mod   torus.patch
-#     > patch_apply.sh torus.patch   mcnp5   mcnp5-mod
-#     > patch_apply.sh torus.patch   mcnp5-mod   mcnp5
+#     > patch_apply.sh orig   mod   patch.1
+#     > patch_apply.sh patch.1   orig   mod
+#     > patch_apply.sh patch.1   mod   orig
 # 
-#     Folder mcnp5 will be copied to mcnp5-mod and files in mcnp5-mod will be
-#     changed according to torus.patch.
-# 
+#     In all these cases, the folder `orig` will be copied to `mod` and than files in
+#     `mod` will be changed according to `patch.1`. 
 # 
 # 
 #     Another example -- apply patch to exisiting files. Assume that folder
-#     mcnp5-mod already exists, and file material.patch also exists.  The
-#     following commands are equal:
+#     `mod` already exists (for example, was created with the above commands),
+#     and file `patch.2` also exists.  The following commands are equal:
 # 
-#     > patch_apply.sh mcnp5-mod materials.patch
-#     > patch_apply.sh materials.patch mcnp5-mod
-# 
+#     > patch_apply.sh mod patch.2
+#     > patch_apply.sh patch.2 mod
+#
+#     and change already existing files in `mod` according to `patch.2`. 
 #     This invocation is useful when several patches must be applied
 #     consequently, and the folder with modified source code already exists.
 # 
 # 
 # 
-#     Another example -- the patch file is not given. In this case the order is
+#     One more example -- the patch file is not given. In this case the order is
 #     important if both arguments are existing folders.
 # 
-#     > patch_apply.sh mcnp5 mcnp5-mod    # copy mcnp5 to mcnp5-mod
-#     > patch_apply.sh mcnp5-mod mcnp5    # equal to above only when mcnp5-mod does not exist
+#     > patch_apply.sh orig mod      # copy orig to mod
+#     > patch_apply.sh mod orig      # equal to the above only when mod does not exist
 # 
 #     This invocation is useful when preparing a new working environment. 
 # 
@@ -162,102 +162,3 @@ fi
 
 
 exit 0
-    
-##########################################################################################################
-# OLD IMPLEMENTATION
-
-# # There are 3 scenarios of using this script:
-# #
-# #   1. Apply PATCH to ORIG and put result to MOD. All three arguments must be specified.
-# #   2. Apply PATCH to allready existing MOD. In this case, argument ORIG not needed. Issue warning before modifying MOD!
-# #   3. Prepare workplace by copying ORIG to MOD. Links should be followed (i.e. ensure that a link in ORIG becomes usual file in MOD) and 
-# #      permissions are modified to grant user modification rights. In this case PATCH argument is not needed.
-# #
-# # In all scenarios, MOD must be always specified, therefor it is always the first argument. If this argument points to existing folder, the
-# # next argument is understood as PATCH file, otherwise, as ORIG folder. In the latter case, the last (third) argument, if given, defines PATCH.
-# 
-# 
-# 
-# mod="$1"
-# 
-# if [[ -d "$mod" ]]; then
-#     # MOD exists. Next argument -- patch file.
-#     pfl="$2"
-# 
-#     read -p "Apply patch $pfl to existing folder $mod. Continue? (y)" a
-#     case $a in
-#         [^yY]) exit 1;;
-#     esac
-# 
-# elif [[ ! -e "$mod" ]]; then
-#     # MOD does not exist. Next argument -- ORIG folder.
-#     org="$2"
-#     pfl="$3"
-#     if [[ 3 -eq $# ]]; then
-#         message=" and apply patch $pfl"
-#     else
-#         message=""
-#     fi
-# 
-#     read -p "Copy folder $org to $mod $message. Continue? (y)" a
-#     case $a in
-#         [^yY]) exit 1;;
-#     esac
-# else
-#     # MOD exists, but not a folder. This is error.
-#     echo "$mod is not a directory."
-#     exit 1
-# fi
-# 
-# exit
-# 
-# orig=$1  # folder with original files
-# ptfl=$(readlink -f $2)  # full path to the patch file. It is needed to specify it from another directory (see cd below)
-# res=$3   # folder with patched files
-# 
-# 
-# if [[ ! -d $orig ]]; then
-#     echo "Original folder does not extst: $orig"
-#     exit 1
-# fi;
-# 
-# if [[ ! -f $ptfl ]]; then
-#     echo "Patch file does not exist: $ptfl"
-#     exit 1
-# fi;
-# 
-# echo "original folder:  $orig"
-# echo "patch full path:  $ptfl"
-# echo "resulting folder: $res"
-# 
-# 
-# if [[ -d $res ]]; then
-#     # res already exists. Warn user
-#     echo "$res already exists. "
-#     echo "Apply patches to files in $res? (y/n)"
-#     read a
-#     case $a in
-#         [^yY]) exit 1;;
-#     esac
-# else
-#     # copy original folder and patch
-#     echo "Copying $orig to $res"
-#     cp -r -L $orig $res  # -L to follow links
-#     chmod -R u+rw $res  # ensure that user has write permission to the copy 
-# fi    
-# 
-# # apply patch
-# echo "applying patch to $res"
-# cd $res
-# patch -p1 -b < $ptfl
-# 
-# # add patch name to a file:
-# # patch name is guessed from the patch file name:
-# echo "patch name is added to $res/patches.log"
-# ptnm=${ptfl##*/}        # remove pathname
-# echo $ptnm >> patches.log 
-# 
-# exit 0
-# 
-# 
-

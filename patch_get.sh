@@ -48,7 +48,7 @@ fi;
 if [[ ! -a exclude_patterns ]]; then
     echo ""
     echo "Example exclude_patterns will be generated. Adjust it"
-    echo "to control inclusion of files into patch."
+    echo "to control inclusion of files into patch, and restart the script."
     echo '*.o'     > exclude_patterns
     echo '*.orig' >> exclude_patterns
     echo '*.log'  >> exclude_patterns
